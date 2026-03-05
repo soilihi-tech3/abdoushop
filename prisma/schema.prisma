@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id           Int           @id @default(autoincrement())
+  first        String
+  last         String
+  email        String        @unique
+  password     String
+  role         String        @default("employee")
+  active       Boolean       @default(true)
+  photo        String?
+  createdAt    DateTime      @default(now())
+  transactions Transaction[]
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  desc     String?
+  products Product[]
+}
+
+model Brand {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  desc     String?
+  products Product[]
+}
+
+model Supplier {
+  id        Int        @id @default(autoincrement())
+  name      String
+  phone     String?
+  email     String?
+  address   String?
+  products  Product[]
+  purchases Purchase[]
+}
+
+model Product {
+  id         Int        @id @default(autoincrement())
+  name       String
+  imei       String?
+  brandId    Int
+  categoryId Int
+  subcat     String?
+  color      String?
+  storage    String?
+  state      String     @default("Neuf")
+  buyPrice   Float
+  sellPrice  Float
+  qty        Int        @default(0)
+  supplierId Int?
+  desc       String?
+  photo      String?
+  createdAt  DateTime   @default(now())
+  brand      Brand      @relation(fields: [brandId], references: [id])
+  category   Category   @relation(fields: [categoryId], references: [id])
+  supplier   Supplier?  @relation(fields: [supplierId], references: [id])
+  purchases  Purchase[]
+}
+
+model Transaction {
+  id              String            @id @default(cuid())
+  date            DateTime          @default(now())
+  client          String
+  phone           String?
+  type            String
+  payment         String
+  amount          Float
+  discount        Float             @default(0)
+  subtotal        Float
+  employeeId      Int
+  oldPhone        String?
+  oldPhoneImei    String?
+  oldPhoneCond    String?
+  oldPhoneStorage String?
+  estimatedValue  Float?
+  newPhoneName    String?
+  newPhoneImei    String?
+  newPhoneStorage String?
+  oldPhoneVal     Float?
+  payDetails      String?
+  employee        Employee          @relation(fields: [employeeId], references: [id])
+  items           TransactionItem[]
+}
+
+model TransactionItem {
+  id            Int         @id @default(autoincrement())
+  transactionId String
+  name          String
+  qty           Int
+  price         Float
+  imei          String?
+  productId     Int?
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+}
+
+model Purchase {
+  id         Int       @id @default(autoincrement())
+  productId  Int?
+  prodName   String
+  cat        String?
+  qty        Int
+  price      Float
+  supplierId Int?
+  supName    String?
+  date       DateTime  @default(now())
+  createdAt  DateTime  @default(now())
+  product    Product?  @relation(fields: [productId], references: [id])
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+}
+
+model Saving {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  date      DateTime
+  note      String?
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value String
+}
