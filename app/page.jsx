@@ -1273,7 +1273,7 @@ function PurchasesPage({ purchases, products, suppliers, toast, onRefresh }) {
         </div>
       </div>
       <div className="tw"><table className="dt" id="pur-tbl">
-        <thead><tr><th>Photo</th><th>Produit</th><th>Marque</th><th>Catégorie</th><th>Stockage</th><th>État</th><th>Qté</th><th>Prix achat</th><th>Total stock</th><th>Fournisseur</th><th>Statut</th></tr></thead>
+        <thead><tr><th>Photo</th><th>Produit</th><th>Catégorie</th><th>Qté</th><th>Prix achat</th><th>Total stock</th><th>Fournisseur</th><th>Statut</th></tr></thead>
         <tbody>
           {products.length ? [...products].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).map(p => {
             const [bc,bl] = stockBadge(p.qty)
@@ -1281,10 +1281,10 @@ function PurchasesPage({ purchases, products, suppliers, toast, onRefresh }) {
               <tr key={p.id}>
                 <td>{p.photo?<img src={p.photo} style={{width:36,height:36,borderRadius:6,objectFit:'cover'}} alt="" />:<div style={{width:36,height:36,borderRadius:6,background:'rgba(37,99,235,.08)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.2rem'}}>{prodEmoji(p.category?.name)}</div>}</td>
                 <td><div style={{fontWeight:600}}>{p.name}</div>{p.imei&&<div style={{fontSize:'.68rem',color:'var(--muted)'}}>IMEI: {p.imei}</div>}</td>
-                <td>{p.brand?.name||'—'}</td>
+               
                 <td>{p.category?.name||'—'}</td>
-                <td>{p.storage||'—'}</td>
-                <td><span className={`bd ${p.state==='Neuf'?'bg':'bo'}`}>{p.state||'—'}</span></td>
+              
+                
                 <td style={{fontFamily:'Arial',fontWeight:700}}>{p.qty}</td>
                 <td style={{fontFamily:'Arial'}}>{fmt(p.buyPrice)}</td>
                 <td style={{fontFamily:'Arial',fontWeight:700,color:'var(--orange)'}}>{fmt(p.buyPrice*p.qty)}</td>
